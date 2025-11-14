@@ -57,7 +57,7 @@ This will execute the pipeline on the CLDrive dataset, performing ternary task w
 
 ### Command-line Arguments
 
-You can specify the dataset as command-line arguments:
+You can specify the task performed as command-line arguments:
 - `--binary` : perform **binary** task with LOSO cross-validation
 - `--ternary` : perform **ternary** task with LOSO cross-validation
 
