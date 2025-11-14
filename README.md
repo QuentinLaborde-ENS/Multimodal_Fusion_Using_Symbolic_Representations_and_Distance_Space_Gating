@@ -1,8 +1,7 @@
 # Multicriteria Semantic Representation of Eye-Tracking Data
 
-Code accompanying the paper: **Multicriteria Semantic Representation of Eye-Tracking Data Using Adaptive Symbolization**.  
-This repository implements the full, interpretable pipeline to convert multivariate eye-tracking features into symbolic sequences, compute semantic distances between recordings, and evaluate downstream tasks.
-The experiments in this study rely on the CLDrive dataset, which is specifically designed for cognitive-load assessment in driving scenarios. While the present implementation focuses on CLDrive, the same methodology can be applied to the ETRA and GazeBase datasets with only minor adjustments. 
+Code accompanying the paper: **Multimodal Fusion Using Symbolic Representations and Distance-Space Gating**.  
+This repository provides the full, interpretable pipeline for converting heterogeneous physiological and behavioral signals into symbolic sequences, computing modality-specific distances, and fusing them through an adaptive distance-space gating mechanism.
 
 ## 🌐 Overview
 
