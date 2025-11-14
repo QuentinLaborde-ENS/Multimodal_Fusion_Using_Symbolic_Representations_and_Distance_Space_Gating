@@ -1,4 +1,4 @@
-# Multicriteria Semantic Representation of Eye-Tracking Data
+# Multimodal Fusion Using Symbolic Representations and Distance-Space Gating
 
 Code accompanying the paper: **Multimodal Fusion Using Symbolic Representations and Distance-Space Gating**.  
 This repository provides the full, interpretable pipeline for converting heterogeneous physiological and behavioral signals into symbolic sequences, computing modality-specific distances, and fusing them through an adaptive distance-space gating mechanism.
