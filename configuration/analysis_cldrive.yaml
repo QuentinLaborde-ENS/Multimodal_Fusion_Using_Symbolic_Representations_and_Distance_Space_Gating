@@ -1,0 +1,110 @@
+
+data: 
+ 
+    
+    task: 'binary'
+    
+    oculomotor_features: [
+'startTime(s)', 'fixDur', 'fixVel', 'fixDriftDisplacement', 'fixDriftDist', 'fixDriftVel', 'fixBCEA', #'  
+'sacFreq', 'sacAmp',   'sacEfficiency',  
+'sacPeakVel' , 'sacPeakAcc', #'sacSkewnessExponent', 
+'sacPeakVelAmpRatio'   
+              ]
+     
+    scanpath_features: [
+'startTime(s)', 'SpLength', 'SpBCEA' , 'SpConvexHull', 'SpFractalDimension', #'SpVoronoi', 'SpKCoefficient', 
+'SpRQARecRate', 'SpRQADet', 'SpRQALam', 
+              ]
+              
+    aoi_features: [
+'startTime(s)', 'AoINumber',  
+'AoIBCEA', 'AoIBCEADisp', 
+'AoILempelZiv',  
+#'AoIStationaryEntropy', 'AoIJointEntropy',
+#'AoIConditionalEntropy' ,  'AoIMutualInformation' #
+              ]
+              
+    eda_features: [
+'startTime(s)', 'edaKurtosis', 
+'edaSkewness', 'edaMean',
+'edaRMSms', 'edaIntegral', 'edaPotency',
+'edaActivity', 'edaMobility', 'edaComplexity'    
+    ]
+
+    ecg_features: [
+'startTime(s)', 'ecgSDNN', 'ecgRMSSD', 'ecgTriindex'
+    ]
+    
+
+general: 
+
+    available_segment_prop: .2
+    
+    oculomotor_partition_length: 5
+    scanpath_partition_length: 20
+    aoi_partition_length: 20 
+    eda_partition_length: 5
+    ecg_partition_length: 20
+    
+    oculomotor_nb_segments: 100
+    scanpath_nb_segments: 50
+    aoi_nb_segments: 50
+    eda_nb_segments: 50
+    ecg_nb_segments: 50
+    
+    sampling_frequency_et: 50
+    sampling_frequency_eda: 128
+    sampling_frequency_ecg: 512
+    
+    segmentation_method: I_VT
+    distance_type: euclidean 
+    
+    size_plan_x: !!float 1800
+    size_plan_y: !!float 1200
+    
+symbolization: 
+    normalization: all
+    normalization_method: empirical
+    binning: True
+          
+    nb_clusters:
+        oculomotor: 20 #25
+        scanpath: 20
+        aoi: 20
+        ecg: 20
+        eda: 20
+       
+clustering: 
+    edit_distance:
+        deletion_cost: !!float 1
+        insertion_cost: !!float 1
+        normalization: max
+   
+    cv_mode: loso
+  
+ 
+    
+    
+    
+    
+   
+    
+    
+    
+    
+    
+    
+   
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
