@@ -53,13 +53,13 @@ After installing the dependencies (see [Installation](#-installation)), you can 
 ```bash
 python main.py --ternary
 ```
-This will execute the pipeline on the CLDrive dataset, performing ternary task.
+This will execute the pipeline on the CLDrive dataset, performing ternary task with LOSO cross-validation.
 
 ### Command-line Arguments
 
 You can specify the dataset as command-line arguments:
-- `--binary` : perform **binary** task  
-- `--ternary` : perform **ternary** task   
+- `--binary` : perform **binary** task with LOSO cross-validation
+- `--ternary` : perform **ternary** task with LOSO cross-validation
 
 
  

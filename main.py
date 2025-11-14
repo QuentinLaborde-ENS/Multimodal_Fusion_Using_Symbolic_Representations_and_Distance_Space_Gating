@@ -1007,7 +1007,7 @@ def run_crossval_pipeline(config, path, task):
     # 4) LOSO splitter
     logo = LeaveOneGroupOut()
     folds = list(logo.split(all_records, groups=subjects))
-    print(f"Running LOSO with {len(folds)} folds, | {task} task")
+    print(f"Running LOSO with {len(folds)} folds | {task} task")
 
     # 5) Parallel execution of folds
     fold_results = Parallel(n_jobs=-1, backend="loky")(
