@@ -14,6 +14,7 @@ from fastcluster import linkage
 import matplotlib.pyplot as plt
 import yaml
 from joblib import Parallel, delayed
+import argparse
 
 
 # --------------------------------------------------------------------
@@ -781,6 +782,7 @@ def run_loso_fold(
     y_all,
     conditions,
     conditions_dict,
+    task
 ):
     """Run one LOSO fold and return metrics + confusion + mean test weights."""
 
@@ -789,7 +791,7 @@ def run_loso_fold(
     y_train = y_all[train_index]
     y_test = y_all[test_index]
 
-    gate_temp = 0.5 if config["data"]["task"] == "ternary" else 1.0
+    gate_temp = 0.5 if task == "ternary" else 1.0
 
     train_pairs = [tuple(r.split("_")) for r in train_records]
     test_pairs = [tuple(r.split("_")) for r in test_records]
@@ -948,7 +950,7 @@ def run_loso_fold(
 # --------------------------------------------------------------------
 
 
-def run_crossval_pipeline(config, path):
+def run_crossval_pipeline(config, path, task):
     """
     High-level orchestration for LOSO:
       - load raw data
@@ -968,8 +970,7 @@ def run_crossval_pipeline(config, path):
         }
     )
 
-    # 3) Labels map
-    task = config["data"]["task"]
+    # 3) Labels map 
     if task == "binary":
         dict_task = {
             "1": "low_wl",
@@ -997,7 +998,7 @@ def run_crossval_pipeline(config, path):
         }
         conditions = ["low_wl", "medium_wl", "high_wl"]
     else:
-        raise ValueError("config['data']['task'] must be 'binary' or 'ternary'.")
+        raise ValueError("task must be 'binary' or 'ternary'.")
 
     y_all = np.array([dict_task[r.split("_")[1]] for r in all_records])
     subjects = np.array([r.split("_")[0] for r in all_records])
@@ -1006,7 +1007,7 @@ def run_crossval_pipeline(config, path):
     # 4) LOSO splitter
     logo = LeaveOneGroupOut()
     folds = list(logo.split(all_records, groups=subjects))
-    print(f"Running LOSO with {len(folds)} folds, | {config['data']['task']} task.")
+    print(f"Running LOSO with {len(folds)} folds, | {task} task")
 
     # 5) Parallel execution of folds
     fold_results = Parallel(n_jobs=-1, backend="loky")(
@@ -1019,6 +1020,7 @@ def run_crossval_pipeline(config, path):
             y_all,
             conditions,
             conditions_dict,
+            task,
         )
         for train_index, test_index in folds
     )
@@ -1056,11 +1058,35 @@ def run_crossval_pipeline(config, path):
 
 
 if __name__ == "__main__":
+    
+    parser = argparse.ArgumentParser(description="Run symbolic pipeline")
+     
+    parser.add_argument(
+        "--binary",
+        action="store_true",
+        help="Use the CLDrive dataset with binary task"
+    )
+    parser.add_argument(
+        "--ternary",
+        action="store_true",
+        help="Use the CLDrive dataset with ternary task"
+    )
+   
+    args = parser.parse_args()
+     
+    if args.binary:
+        task = 'binary' 
+    elif args.ternary:
+        task = 'ternary' 
+    else:
+        raise ValueError("Please specify one task using --binary or --ternary")
+     
+        
     with open("configuration/analysis_cldrive.yaml", "r") as file:
         config = yaml.safe_load(file)
 
     path = "input/features/"
-    run_crossval_pipeline(config, path)
+    run_crossval_pipeline(config, path, task)
 
 
 
