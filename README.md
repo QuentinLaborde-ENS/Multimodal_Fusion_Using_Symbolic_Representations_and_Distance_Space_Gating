@@ -1,34 +1,37 @@
-# Multimodal Fusion Using Symbolic Representations and Distance-Space Gating
+# Symbolic Representations and Geometry-Driven Gating for Physiological State Inference
 
-Code accompanying the paper: **Multimodal Fusion Using Symbolic Representations and Distance-Space Gating: A Case Study**.  
+Code accompanying the paper: **Beyond Deep Fusion: Symbolic Representations and Geometry-Driven Gating for Physiological State Inference**.  
 This repository provides the full, interpretable pipeline for converting heterogeneous physiological and behavioral signals into symbolic sequences, computing modality-specific distances, and fusing them through an adaptive distance-space gating mechanism.
 
-## 🌐 Overview
+## 🌐 Overview – The Pipeline at a Glance
 
-For each modality (e.g., fixations, saccades, scanpaths, AoIs, ECG, EDA), the pipeline performs:
+The method turns raw, heterogeneous, and noisy physiological/behavioral signals (eye fixations, saccades, scanpaths, areas of interest, ECG, EDA) into **compact, interpretable symbolic sequences** and fuses them in a fully distance-based, adaptive way — no deep networks, no attention, no feature-level concatenation.
+
+For **every modality**, the **first five steps** are applied independently to generate modality-specific symbolic sequences and distance matrices:
 
 1. **Feature Normalization (ECDF)**  
-   → maps each raw feature to the range **[0, 1]**, using *train-only* distributions.
+   Empirical cumulative distribution mapping → all features scaled to [0, 1] using **training-set statistics only** (perfect subject-invariance).
 
 2. **Adaptive Segmentation (PELT)**  
-   → detects piecewise-constant regions in multivariate time series.
+   Change-point detection that automatically splits each recording into quasi-stationary regimes (Pruned Exact Linear Time algorithm).
 
-3. **Symbolization (Kernel PCA → K-Means)**  
-   → embeds segment descriptors in a nonlinear space and assigns each to one of **K symbolic prototypes**.
+3. **Nonlinear Symbolization (Kernel PCA + K-Means)**  
+   Segment means are embedded via RBF Kernel PCA (captures nonlinear structure), then clustered into **K = 20 symbolic prototypes** per modality. Each prototype is an interpretable "physiological/behavioral motif".
 
-4. **Sequence Distance (Wagner–Fischer)**  
-   → computes a generalized edit distance where substitution costs equal the Euclidean distance between symbol centroids.
+4. **Learned Edit Distance (Wagner–Fischer)**  
+   Pairwise dissimilarity between two recordings = generalized Levenshtein distance on their symbolic sequences, where substitution cost = Euclidean distance between prototype centroids in kernel space.
 
-5. **Distance-Space Gating**  
-   → estimates per-recording modality reliability from local neighbourhood geometry in each modality-specific distance matrix.
+5. **Distance-Space Gating (ultra-lightweight)**  
+   Three scale-free geometric indicators (local density, regularity, label purity) are extracted from each modality's distance matrix → one **regularized logistic regression per modality** (≤ 30 parameters total) predicts per-sample reliability in a self-supervised way.
 
-6. **Kernel Fusion**  
-   → performs symmetric, confidence-weighted bilinear fusion of modality kernels.
+**Then, across all modalities** (steps 6–7):  
+6. **Confidence-Weighted Kernel Fusion**  
+   Modality-specific distance matrices → RBF kernels → symmetric pairwise gating → final positive-definite fused kernel (localized multiple kernel learning style, but with almost zero trainable parameters).
 
 7. **Classification**  
-   → the fused kernel is fed directly to an SVM with a precomputed kernel.
+   The fused kernel is directly fed to a standard SVM (precomputed-kernel mode). No further training needed.
 
-The goal is to obtain **interpretable, compact, and robust symbolic representations** of multimodal behavioral and physiological signals.
+**Result:** a fully symbolic, interpretable, data-efficient, and highly robust multimodal classifier that consistently outperforms deep-learning baselines on the CL-Drive cognitive-load benchmark — even without using EEG.
 
 ---
 
