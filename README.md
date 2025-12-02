@@ -25,6 +25,7 @@ For **every modality**, the **first five steps** are applied independently to ge
    Three scale-free geometric indicators (local density, regularity, label purity) are extracted from each modality's distance matrix → one **regularized logistic regression per modality** (≤ 30 parameters total) predicts per-sample reliability in a self-supervised way.
 
 **Then, across all modalities** (steps 6–7):  
+
 6. **Confidence-Weighted Kernel Fusion**  
    Modality-specific distance matrices → RBF kernels → symmetric pairwise gating → final positive-definite fused kernel (localized multiple kernel learning style, but with almost zero trainable parameters).
 
